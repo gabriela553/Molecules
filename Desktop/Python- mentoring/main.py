@@ -1,4 +1,3 @@
-import json
 import os
 from typing import List
 from fastapi import FastAPI
@@ -18,10 +17,7 @@ db: List[Molecule] = [
     Molecule(name="Water", formula="H20", weight="18u")
 ]
 
-file_path = "C:\\Users\\gabi0\\Desktop\\chemical.json"
-
-
-# Do not know how to save this in json format
+file_path = "C:\\Users\\gabi0\\Desktop\\chemical.txt"
 
 
 @app.post("/molecules")
@@ -29,12 +25,10 @@ async def add_molecule(molecule: Molecule):
     db.append(molecule)
     if os.path.getsize(file_path) == 0:
         with open(file_path, "w+") as file:
-            # json.dumps(db, indent=2)
-            file.write(f"{db}")
+            file.write(str([molecule.dict() for molecule in db]))
     else:
         with open(file_path, "a") as file:
-            file.write(f"{molecule}")
-            # json.dump(molecule, file)
+            file.write(str(molecule.dict()))
     return
 
 

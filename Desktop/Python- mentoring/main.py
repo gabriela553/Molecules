@@ -1,4 +1,5 @@
-import os
+import json
+from pathlib import Path
 from typing import List
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -22,14 +23,18 @@ file_path = "C:\\Users\\gabi0\\Desktop\\chemical.txt"
 
 @app.post("/molecules")
 async def add_molecule(molecule: Molecule):
-    db.append(molecule)
-    if os.path.getsize(file_path) == 0:
-        with open(file_path, "w+") as file:
-            file.write(str([molecule.dict() for molecule in db]))
-    else:
-        with open(file_path, "a") as file:
-            file.write(str(molecule.dict()))
-    return
+    p = Path(file_path)
+    if not p.exists():
+        with p.open('w') as file:
+            content = json.dumps([])
+            file.write(content)
+    with open(file_path, "r") as file:
+        content = json.load(file)
+        content.append(molecule.model_dump())
+    content = json.dumps(content)
+    with open(file_path, "w") as file:
+        file.write(content)
+    return content
 
 
 @app.get("/molecules")

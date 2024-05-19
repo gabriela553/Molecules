@@ -1,7 +1,7 @@
 import json
 from config import create_molecule_file
 from fastapi.testclient import TestClient
-from molecules_app.main import app
+from main import app
 
 client = TestClient(app)
 

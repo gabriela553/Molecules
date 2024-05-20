@@ -15,7 +15,7 @@ class Molecule(BaseModel):
 async def add_molecule(molecule: Molecule | list[Molecule], file_path):
     with open(file_path, "r") as file:
         content = json.load(file)
-        if type(molecule) is list:
+        if isinstance(molecule, list):
             for mol in molecule:
                 content.append(mol.model_dump())
         else:
@@ -27,12 +27,12 @@ async def add_molecule(molecule: Molecule | list[Molecule], file_path):
 
 
 @app.get("/molecules")
-async def fetch_molecules(file_path_add, name: str | None = None):
+async def fetch_molecules(file_path_add, name: str | None = None) -> Molecule | list[Molecule]:
     with open(file_path_add, "r") as file:
         content = json.load(file)
         if name:
             for mol in content:
                 if mol["name"] == name:
-                    return mol
+                    return Molecule(**mol)
         else:
-            return content
+            return [Molecule(**mol) for mol in content]

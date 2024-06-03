@@ -1,5 +1,6 @@
-import json
-from fastapi import FastAPI
+import sqlite3
+import config
+from fastapi import Depends, FastAPI
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -11,28 +12,63 @@ class Molecule(BaseModel):
     weight: str
 
 
-@app.post("/molecules")
-async def add_molecule(molecule: Molecule | list[Molecule], file_path):
-    with open(file_path, "r") as file:
-        content = json.load(file)
-        if isinstance(molecule, list):
-            for mol in molecule:
-                content.append(mol.model_dump())
+async def get_db():
+    db = sqlite3.connect(config.DB_PATH)
+    cursor = db.cursor()
+
+    cursor.execute('''
+        CREATE TABLE if not exists molecules (
+            name string,
+            formula string,
+            weight string)
+            
+    ''')
+
+    db.commit()
+    return db
+
+
+@app.post("/molecule")
+async def add_molecule(molecule: Molecule | list[Molecule], db=Depends(get_db)):
+    if isinstance(molecule, list):
+        for mol in molecule:
+            db.execute(f'''INSERT INTO molecules (name, formula, weight) VALUES ("{mol.name}", "{mol.formula}", 
+            "{mol.weight}")''')
+    else:
+        db.execute(f'''INSERT INTO molecules (name, formula, weight) VALUES ("{molecule.name}", "{molecule.formula}", 
+        "{molecule.weight}")''')
+    db.commit()
+    db.close()
+    return molecule
+
+
+@app.get("/molecule")
+async def fetch_molecules(name: str | None = None, db=Depends(get_db)):
+    if name:
+        results = db.execute(f'''SELECT * FROM molecules WHERE name = "{name}" ''')
+        results = results.fetchall()
+        db.close()
+        if results:
+            return results
         else:
-            content.append(molecule.model_dump())
-    content = json.dumps(content)
-    with open(file_path, "w") as file:
-        file.write(content)
-    return content
+            return "Name not found"
+    else:
+        return "No query name"
 
 
 @app.get("/molecules")
-async def fetch_molecules(file_path_add, name: str | None = None) -> Molecule | list[Molecule]:
-    with open(file_path_add, "r") as file:
-        content = json.load(file)
-        if name:
-            for mol in content:
-                if mol["name"] == name:
-                    return Molecule(**mol)
+async def find_molecules(element: str | None = None, db=Depends(get_db)):
+    if element:
+        results = db.execute(f'''SELECT * FROM molecules''')
+        results = results.fetchall()
+        selected = []
+        for mol in results:
+            if element.upper() in str(mol[1]):
+                selected.append(mol[0])
+        db.close()
+        if not selected:
+            return "Name not found"
         else:
-            return [Molecule(**mol) for mol in content]
+            return selected
+    else:
+        return "No query element"

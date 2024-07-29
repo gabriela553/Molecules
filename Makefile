@@ -2,6 +2,6 @@
 
 build:
 	docker-compose up -d --build
-test: build
+test:
 	@echo "Running tests..."
-	python -m pytest -v -s
+	docker compose run app pytest

@@ -3,8 +3,8 @@ from pydantic import BaseModel
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
-import config
-from tables.molecule import Base, MoleculeInDB
+from molecules_app import config
+from molecules_app.tables.molecule import Base, MoleculeInDB
 
 app = FastAPI()
 

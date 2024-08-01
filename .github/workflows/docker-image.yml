@@ -19,12 +19,21 @@ jobs:
       run: ls -la
       
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      id: build-image
+      run: |
+        IMAGE_NAME="my-image-name:$(date +%s)"
+        echo "IMAGE_NAME=${IMAGE_NAME}" >> $GITHUB_ENV
+        docker build . --file Dockerfile --tag $IMAGE_NAME
 
     - name: Save Docker image as artifact
-      run: docker save my-image-name:$(date +%s) -o my-image.tar
+      run: |
+        docker save ${{ env.IMAGE_NAME }} -o my-image.tar
 
     - name: Upload Docker image artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: docker-image
+        path: my-image.tar
       uses: actions/upload-artifact@v2
       with:
         name: docker-image

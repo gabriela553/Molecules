@@ -14,7 +14,18 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    
     - name: List directory contents
       run: ls -la
+      
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+
+    - name: Save Docker image as artifact
+      run: docker save my-image-name:$(date +%s) -o my-image.tar
+
+    - name: Upload Docker image artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: docker-image
+        path: my-image.tar

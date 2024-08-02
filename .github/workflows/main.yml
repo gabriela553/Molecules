@@ -24,6 +24,8 @@ jobs:
         uses: hoverkraft-tech/compose-action@v2.0.1
         with:
           compose-file: "./docker-compose.yml"
+        env:
+          CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
           
       - name: Wait for services to be ready
         run: sleep 30  

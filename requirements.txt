@@ -7,3 +7,4 @@ isort~=5.13.2
 pyright
 ruff
 httpx
+dotenv

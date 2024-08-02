@@ -1,3 +1,5 @@
+import os
+
 from fastapi import Depends, FastAPI, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import create_engine, select
@@ -5,6 +7,11 @@ from sqlalchemy.orm import Session
 
 from molecules_app import config
 from molecules_app.tables.molecule import Base, MoleculeInDB
+from dotenv import load_dotenv
+
+load_dotenv()
+
+CONNECTION_STRING = os.getenv('CONNECTION_STRING')
 
 app = FastAPI()
 

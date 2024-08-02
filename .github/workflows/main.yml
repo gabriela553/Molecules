@@ -26,8 +26,8 @@ jobs:
           compose-file: "./docker-compose.yml"
           
       - name: Wait for services to be ready
-        run: sleep 30  # Poczekaj na pełne uruchomienie usług
+        run: sleep 30  
 
       - name: Execute tests in the running services
         run: |
-          docker-compose exec app pytest
+          docker-compose exec -T app pytest

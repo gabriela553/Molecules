@@ -13,10 +13,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+    
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
+
       - name: Run docker-compose
         uses: hoverkraft-tech/compose-action@v2.0.1
         with:
           compose-file: "./docker-compose.yml"
+          
+      - name: Wait for services to be ready
+        run: sleep 30  # Poczekaj na pełne uruchomienie usług
 
       - name: Execute tests in the running services
         run: |

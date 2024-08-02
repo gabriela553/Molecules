@@ -30,4 +30,4 @@ jobs:
 
       - name: Execute tests in the running services
         run: |
-          docker-compose exec test-app pytest
+          docker-compose exec app pytest

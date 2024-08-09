@@ -35,7 +35,7 @@ class Molecule(BaseModel):
 
 
 async def get_db():
-    engine = create_engine(config.CONNECTION_STRING, echo=True)
+    engine = create_engine(CONNECTION_STRING, echo=True)
     db = Session(engine)
     Base.metadata.create_all(engine)
     try:

@@ -1,10 +1,16 @@
+import os
+
 from fastapi import Depends, FastAPI, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
-from molecules_app import config
 from molecules_app.tables.molecule import Base, MoleculeInDB
+from dotenv import load_dotenv
+
+load_dotenv()
+
+CONNECTION_STRING = os.getenv('CONNECTION_STRING')
 
 app = FastAPI()
 
@@ -28,7 +34,7 @@ class Molecule(BaseModel):
 
 
 async def get_db():
-    engine = create_engine(config.CONNECTION_STRING, echo=True)
+    engine = create_engine(CONNECTION_STRING, echo=True)
     db = Session(engine)
     Base.metadata.create_all(engine)
     try:

@@ -8,3 +8,5 @@ pyright
 ruff
 httpx
 python-dotenv
+black
+ruff

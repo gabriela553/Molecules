@@ -24,6 +24,3 @@ services:
         condition: service_healthy
     env_file:
       - .env
-secrets:
-  my_secret:
-    file: ./.env

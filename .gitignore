@@ -1,1 +1,42 @@
-.env
+# Python bytecode files
+*.pyc
+*.pyo
+__pycache__
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# FastAPI specific files (optional, e.g., if using Docker)
+*.env
+*.env.*
+
+# Logs
+*.log
+
+# IDE config files (for VS Code, PyCharm, etc.)
+.vscode/
+.idea/
+
+# Coverage reports
+.coverage
+*.cover
+*.hypothesis/
+
+# Test output
+nosetests.xml
+coverage.xml
+*.hypothesis/
+
+# Docker files (if using Docker, you might not want to include these)
+.docker/
+docker-compose.override.yml
+
+# Build files (for FastAPI app packaging)
+build/
+dist/
+*.egg-info/
+
+# .pytest_cache, if using pytest
+.pytest_cache/

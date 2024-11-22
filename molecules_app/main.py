@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-CONNECTION_STRING = os.getenv('CONNECTION_STRING')
+CONNECTION_STRING = os.getenv("CONNECTION_STRING")
 
 app = FastAPI()
 
@@ -23,13 +23,21 @@ class Molecule(BaseModel):
 
     @staticmethod
     def from_molecule_in_db(molecule_in_db: MoleculeInDB):
-        molecule = Molecule(id=molecule_in_db.id, name=molecule_in_db.name, formula=molecule_in_db.formula,
-                            weight_in_units=molecule_in_db.weight_in_units)
+        molecule = Molecule(
+            id=molecule_in_db.id,
+            name=molecule_in_db.name,
+            formula=molecule_in_db.formula,
+            weight_in_units=molecule_in_db.weight_in_units,
+        )
         return molecule
 
     def to_molecule_in_db(self):
-        molecule = MoleculeInDB(id=self.id, name=self.name, formula=self.formula,
-                                weight_in_units=self.weight_in_units)
+        molecule = MoleculeInDB(
+            id=self.id,
+            name=self.name,
+            formula=self.formula,
+            weight_in_units=self.weight_in_units,
+        )
         return molecule
 
 

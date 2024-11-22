@@ -28,8 +28,8 @@ jobs:
         with:
           compose-file: "./docker-compose.yml"
         env:
-          CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
           
       - name: Wait for services to be ready
         run: sleep 30  

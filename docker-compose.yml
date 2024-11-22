@@ -19,6 +19,8 @@ services:
       - "8080:8080"
     environment:
       - PYTHONPATH=/root/molecules_app
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - CONNECTION_STRING=${CONNECTION_STRING}
     depends_on:
       db:
         condition: service_healthy

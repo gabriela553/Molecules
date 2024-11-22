@@ -13,28 +13,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-    
-      - name: Install Docker Compose
-        run: |
-          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-
-
       - name: Set up environment variables
         run: |
-          echo "CONNECTION_STRING=${{ secrets.CONNECTION_STRING }}" >> $GITHUB_ENV
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> $GITHUB_ENV
-
+          echo "CONNECTION_STRING=${{ secrets.CONNECTION_STRING }}" >> $GITHUB_ENV
 
       - name: Run docker-compose
-        uses: hoverkraft-tech/compose-action@v2.0.1
-        with:
-          compose-file: "./docker-compose.yml"
+        run: |
+          docker-compose up -d --build
         env:
-          CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          
+          CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
+
       - name: Wait for services to be ready
+        run: sleep 30  
+
+      - name: Execute tests in the running services
+        run: |
+          docker-compose exec -T app pytest
+
         run: sleep 30  
 
       - name: Execute tests in the running services

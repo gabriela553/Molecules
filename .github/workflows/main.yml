@@ -24,7 +24,7 @@ jobs:
         env:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
-
+          
       - name: Wait for services to be ready
         run: sleep 30  
 
@@ -32,8 +32,3 @@ jobs:
         run: |
           docker-compose exec -T app pytest
 
-        run: sleep 30  
-
-      - name: Execute tests in the running services
-        run: |
-          docker-compose exec -T app pytest
